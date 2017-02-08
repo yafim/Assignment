@@ -43,10 +43,8 @@ namespace Utils
         #endregion
 
         #region Getters And Setters
-
         private string m_NoDataString = "--No Data--";
         public string NoDataString { get { return m_NoDataString; } }
-        
         #endregion
 
         /// <summary>
