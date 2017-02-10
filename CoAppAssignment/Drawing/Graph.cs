@@ -11,25 +11,29 @@ using Microsoft.Msagl.DebugHelpers;
 using Microsoft.Msagl.Layout.Layered;
 using P2 = Microsoft.Msagl.Core.Geometry.Point;
 
-namespace Microsoft.Msagl.Drawing {
+namespace Microsoft.Msagl.Drawing
+{
     /// <summary>
     /// Graph for drawing. Putting an instance of this class to property Graph triggers the layout under the hood
     /// </summary>
     [Serializable]
-    public class Graph : DrawingObject, ILabeledObject {
-        private Subgraph rootSubgraph=new Subgraph("the root subgraph's boundary");
+    public class Graph : DrawingObject, ILabeledObject
+    {
+        private Subgraph rootSubgraph = new Subgraph("the root subgraph's boundary");
         ///<summary>
         ///</summary>
         public Subgraph RootSubgraph { get { return rootSubgraph; } set { rootSubgraph = value; } }
 
 
 #if TEST_MSAGL
-        [NonSerialized] Database dataBase;
+        [NonSerialized]
+        Database dataBase;
 
         /// <summary>
         /// debug only
         /// </summary>
-        public Database DataBase {
+        public Database DataBase
+        {
             get { return dataBase; }
             set { dataBase = value; }
         }
@@ -39,15 +43,18 @@ namespace Microsoft.Msagl.Drawing {
         /// <summary>
         /// the label of the object
         /// </summary>
-        public Label Label {
+        public Label Label
+        {
             get { return label; }
             set { label = value; }
         }
 
         ///<summary>
         ///</summary>
-        public IEnumerable<Node> Nodes {
-            get {
+        public IEnumerable<Node> Nodes
+        {
+            get
+            {
                 foreach (var r in nodeMap.Values)
                     yield return (Node)r;
             }
@@ -64,38 +71,42 @@ namespace Microsoft.Msagl.Drawing {
             set { layoutAlgorithm = value; }
         }
 
-        static void WriteNodeCollection(TextWriter sw, IEnumerable nodeLabels) {
+        static void WriteNodeCollection(TextWriter sw, IEnumerable nodeLabels)
+        {
             int i = 0;
 
             sw.Write(" ");
 
-            foreach (string s in nodeLabels) {
+            foreach (string s in nodeLabels)
+            {
                 sw.Write(s);
                 sw.Write(" ");
-                i = (i + 1)%6;
+                i = (i + 1) % 6;
 
                 if (i == 0)
                     sw.WriteLine("");
             }
         }
 
-        void WriteNodes(TextWriter sw) {
+        void WriteNodes(TextWriter sw)
+        {
             sw.WriteLine("//nodes");
             foreach (Node node in nodeMap.Values)
                 sw.WriteLine(node.ToString());
         }
-        
-        
+
+
         /// <summary>
         /// Prints Microsoft.Msagl.Drawing in the DOT format - has side effects!
         /// </summary>
         /// <returns>String</returns>
         [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider",
             MessageId = "System.IO.StringWriter.#ctor")]
-        public override string ToString() {
+        public override string ToString()
+        {
             var sw = new StringWriter();
 
-            sw.WriteLine("digraph \"" + (string.IsNullOrEmpty(Label.Text)? "noname":Label.Text) + "\" {");
+            sw.WriteLine("digraph \"" + (string.IsNullOrEmpty(Label.Text) ? "noname" : Label.Text) + "\" {");
 
             WriteStms(sw);
 
@@ -107,13 +118,16 @@ namespace Microsoft.Msagl.Drawing {
         }
 
 
-        void WriteEdges(TextWriter tw) {
-            foreach (Edge edge in Edges) {
+        void WriteEdges(TextWriter tw)
+        {
+            foreach (Edge edge in Edges)
+            {
                 tw.WriteLine(edge.ToDotGeometry());
             }
         }
 
-        void WriteStms(TextWriter sw) {
+        void WriteStms(TextWriter sw)
+        {
             sw.WriteLine(attr.ToString(Label.Text));
             WriteNodes(sw);
             WriteEdges(sw);
@@ -122,15 +136,18 @@ namespace Microsoft.Msagl.Drawing {
         /// <summary>
         /// Returns the bounding box of the graph
         /// </summary>
-        public override Rectangle BoundingBox {
-            get {
+        public override Rectangle BoundingBox
+        {
+            get
+            {
                 return GeometryGraph != null
                            ? PumpByBorder(GeometryGraph.BoundingBox)
                            : new Rectangle(0, 0, new Point(1, 1));
             }
         }
 
-        Rectangle PumpByBorder(Rectangle rectangle) {
+        Rectangle PumpByBorder(Rectangle rectangle)
+        {
             var del = new P2(Attr.Border, Attr.Border);
             return new Rectangle(rectangle.LeftBottom - del, rectangle.RightTop + del);
         }
@@ -144,7 +161,8 @@ namespace Microsoft.Msagl.Drawing {
         /// The graph attribute property
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Attr")]
-        public GraphAttr Attr {
+        public GraphAttr Attr
+        {
             get { return attr; }
             set { attr = value; }
         }
@@ -152,42 +170,48 @@ namespace Microsoft.Msagl.Drawing {
         /// <summary>
         /// the width of the graph
         /// </summary>
-        public double Width {
+        public double Width
+        {
             get { return GeometryGraph != null ? GeometryGraph.Width + Attr.Border : 1; }
         }
 
         /// <summary>
         /// the height of the graph
         /// </summary>
-        public double Height {
+        public double Height
+        {
             get { return GeometryGraph != null ? GeometryGraph.Height + Attr.Border : 1; }
         }
 
         /// <summary>
         /// left of the graph
         /// </summary>
-        public double Left {
+        public double Left
+        {
             get { return GeometryGraph != null ? GeometryGraph.Left - Attr.Border : 0; }
         }
 
         /// <summary>
         /// top of the graph
         /// </summary>
-        public double Top {
+        public double Top
+        {
             get { return GeometryGraph != null ? GeometryGraph.Top + Attr.Border : 1; }
         }
 
         /// <summary>
         /// bottom of the graph
         /// </summary>
-        public double Bottom {
+        public double Bottom
+        {
             get { return GeometryGraph != null ? GeometryGraph.Bottom - Attr.Border : 0; }
         }
 
         /// <summary>
         /// right of the graph
         /// </summary>
-        public double Right {
+        public double Right
+        {
             get { return GeometryGraph != null ? GeometryGraph.Right + Attr.Border : 1; }
         }
 
@@ -197,9 +221,10 @@ namespace Microsoft.Msagl.Drawing {
         /// <summary>
         /// debug only visible
         /// </summary>
-        public ICollection<Node> History {
+        public ICollection<Node> History
+        {
             get { return history; }
-            set { history = (List<Node>) value; }
+            set { history = (List<Node>)value; }
         }
 #endif
 
@@ -209,37 +234,6 @@ namespace Microsoft.Msagl.Drawing {
         /// </summary>
         /// <param name="nodeId">is a key to the node in the Node's table</param>
         /// <returns>it can return a Subgraph too</returns>
-        public Node AddNode(string nodeId, string title) {
-            Node ret;
-            if (RootSubgraph != null && RootSubgraph.IsUpdated) {
-                SubgraphMap.Clear();
-                foreach (var sg in RootSubgraph.AllSubgraphsDepthFirst())
-                    SubgraphMap[sg.Id] = sg;
-                RootSubgraph.IsUpdated = false;
-            }
-            Subgraph subgraph;
-            if (SubgraphMap.TryGetValue(nodeId, out subgraph))
-                return subgraph;
-#if SILVERLIGHT
-            object obj;
-            nodeMap.TryGetValue(nodeId, out obj);
-            if(obj!=null)
-                ret = (Node) obj;
-            else ret = null;
-#else
-            ret = nodeMap[nodeId] as Node;
-#endif
-            if (ret == null) {
-                ret = new Node(nodeId, title);
-                nodeMap[nodeId] = ret;
-#if TEST_MSAGL
-                history.Add(ret);
-#endif
-            }
-            return ret;
-        }
-
-
         public Node AddNode(string nodeId)
         {
             Node ret;
@@ -277,7 +271,8 @@ namespace Microsoft.Msagl.Drawing {
         /// adds a node to the graph
         /// </summary>
         /// <param name="node"></param>
-        public void AddNode(Node node) {
+        public void AddNode(Node node)
+        {
             if (nodeMap.ContainsKey(node.Id))
                 return;
             if (subgraphMap.ContainsKey(node.Id))
@@ -288,12 +283,11 @@ namespace Microsoft.Msagl.Drawing {
             nodeMap[node.Id] = node;
         }
 
-
-
         /// <summary>
         /// Number of nodes in the graph without counting the subgraphs.
         /// </summary>
-        public int NodeCount {
+        public int NodeCount
+        {
             get { return nodeMap.Count; }
         }
 
@@ -303,8 +297,10 @@ namespace Microsoft.Msagl.Drawing {
         /// </summary>
         /// <param name="edgeId"></param>
         /// <returns></returns>
-        public Edge EdgeById(string edgeId) {
-            if (idToEdges == null || idToEdges.Count == 0) {
+        public Edge EdgeById(string edgeId)
+        {
+            if (idToEdges == null || idToEdges.Count == 0)
+            {
                 foreach (Edge e in Edges)
                     if (e.Attr.Id != null)
                         idToEdges[e.Attr.Id] = e;
@@ -316,7 +312,8 @@ namespace Microsoft.Msagl.Drawing {
         /// <summary>
         /// The number of dges in the graph.
         /// </summary>
-        public int EdgeCount {
+        public int EdgeCount
+        {
             get { return Edges.Count(); }
         }
 
@@ -324,15 +321,18 @@ namespace Microsoft.Msagl.Drawing {
         /// Removes an edge, if the edge doesn't exist then nothing happens.
         /// </summary>
         /// <param name="edge">edge reference</param>
-        public virtual void RemoveEdge(Edge edge) {
+        public virtual void RemoveEdge(Edge edge)
+        {
             if (edge == null)
                 return;
             Node source = edge.SourceNode;
             Node target = edge.TargetNode;
-            if (source != target) {
+            if (source != target)
+            {
                 source.RemoveOutEdge(edge);
                 target.RemoveInEdge(edge);
-            } else
+            }
+            else
                 source.RemoveSelfEdge(edge);
             if (edge.GeometryObject != null)
                 GeometryGraph.Edges.Remove(edge.GeometryObject as Core.Layout.Edge);
@@ -342,7 +342,8 @@ namespace Microsoft.Msagl.Drawing {
         /// Removes a node and all of its edges. If the node doesn't exist, nothing happens.
         /// </summary>
         /// <param name="node">node reference</param>
-        public virtual void RemoveNode(Node node) {
+        public virtual void RemoveNode(Node node)
+        {
             if (node == null || !NodeMap.ContainsKey(node.Id))
                 return;
             var delendi = new ArrayList();
@@ -365,21 +366,12 @@ namespace Microsoft.Msagl.Drawing {
         /// <param name="edgeLabel">edge labe - can be null</param>
         /// <param name="target">target node id</param>
         /// <returns>Edge</returns>
-        public virtual Edge AddEdge(string source, string edgeLabel, string target) {
-            string l = edgeLabel;
-            if (l == null)
-                l = "";
-            var edge = new Edge(source, l, target) { SourceNode = AddNode(source), TargetNode = AddNode(target) };
-            AddPrecalculatedEdge(edge);
-            return edge;
-        }
-
-        public virtual Edge AddEdge(string source, string sourceTitle, string targetTitle, string edgeLabel, string target)
+        public virtual Edge AddEdge(string source, string edgeLabel, string target)
         {
             string l = edgeLabel;
             if (l == null)
                 l = "";
-            var edge = new Edge(source, l, target) { SourceNode = AddNode(source, sourceTitle), TargetNode = AddNode(target, targetTitle) };
+            var edge = new Edge(source, l, target) { SourceNode = AddNode(source), TargetNode = AddNode(target) };
             AddPrecalculatedEdge(edge);
             return edge;
         }
@@ -389,11 +381,14 @@ namespace Microsoft.Msagl.Drawing {
         /// </summary>
         /// <param name="edge"></param>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Precalculated")]
-        public void AddPrecalculatedEdge(Edge edge) {
-            if (edge.Source != edge.Target) {
+        public void AddPrecalculatedEdge(Edge edge)
+        {
+            if (edge.Source != edge.Target)
+            {
                 edge.SourceNode.AddOutEdge(edge);
                 edge.TargetNode.AddInEdge(edge);
-            } else
+            }
+            else
                 edge.SourceNode.AddSelfEdge(edge);
         }
 
@@ -402,7 +397,8 @@ namespace Microsoft.Msagl.Drawing {
         /// </summary>
         /// <param name="nodeId"></param>
         /// <returns></returns>
-        public Node FindNode(string nodeId) {
+        public Node FindNode(string nodeId)
+        {
             return nodeMap[nodeId] as Node;
         }
 
@@ -435,11 +431,6 @@ namespace Microsoft.Msagl.Drawing {
             return AddEdge(source, null, target);
         }
 
-        public virtual Edge AddEdge(string source, string sourceTitle, string targetTitle, string target)
-        {
-            return AddEdge(source, sourceTitle, targetTitle, null, target);
-        }
-        
         /// <summary>
         /// It is very strange, but the layouts don't look not so good if I use Dictionary over strings
         /// </summary>
@@ -448,7 +439,8 @@ namespace Microsoft.Msagl.Drawing {
         /// <summary>
         /// labels -> nodes 
         /// </summary>
-        public Hashtable NodeMap {
+        public Hashtable NodeMap
+        {
             get { return nodeMap; }
         }
 
@@ -462,26 +454,32 @@ namespace Microsoft.Msagl.Drawing {
         /// visible only in debug
         /// </summary>
         /// <param name="nodeM"></param>
-        public void InitNodeMap(Hashtable nodeM) {
+        public void InitNodeMap(Hashtable nodeM)
+        {
             nodeMap = nodeM;
         }
 #endif
 
-        
+
         /// <summary>
         /// The enumeration of edges. One need to be careful with calling Edges.Count() since it enumerates the whole collection
         /// </summary>
-        public IEnumerable<Edge> Edges {
-            get {
-                if (RootSubgraph != null) {
-                    foreach (var subgraph in RootSubgraph.AllSubgraphsWidthFirstExcludingSelf()) {
+        public IEnumerable<Edge> Edges
+        {
+            get
+            {
+                if (RootSubgraph != null)
+                {
+                    foreach (var subgraph in RootSubgraph.AllSubgraphsWidthFirstExcludingSelf())
+                    {
                         foreach (var e in subgraph.OutEdges)
                             yield return e;
                         foreach (var e in subgraph.SelfEdges)
                             yield return e;
                     }
                 }
-                foreach (var node in Nodes) {
+                foreach (var node in Nodes)
+                {
                     foreach (var e in node.OutEdges)
                         yield return e;
                     foreach (var e in node.SelfEdges)
@@ -492,17 +490,19 @@ namespace Microsoft.Msagl.Drawing {
 
 
         Hashtable idToEdges = new Hashtable();
-       
 
 
-        [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")] string id;
+
+        [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
+        string id;
 
         /// <summary>
         /// Graph constructor
         /// </summary>
         /// <param name="label">graph label</param>
         /// <param name="id">graph id</param>
-        public Graph(string label, string id) {
+        public Graph(string label, string id)
+        {
             this.id = id;
             Label = new Label();
             Label.Text = label;
@@ -512,7 +512,9 @@ namespace Microsoft.Msagl.Drawing {
         /// <summary>
         /// constructor
         /// </summary>
-        public Graph() : this("") {
+        public Graph()
+            : this("")
+        {
         }
 
 
@@ -520,13 +522,15 @@ namespace Microsoft.Msagl.Drawing {
         /// Constructor
         /// </summary>
         /// <param name="labelPar"></param>
-        public Graph(string labelPar) {
+        public Graph(string labelPar)
+        {
             Label = new Label();
             id = Label.Text = labelPar;
             InitAttributes();
         }
 
-        void InitAttributes() {
+        void InitAttributes()
+        {
             attr = new GraphAttr();
             //     CreateSelectedNodeAttr();
             //     CreateSelectedEdgeAttr();
@@ -538,7 +542,8 @@ namespace Microsoft.Msagl.Drawing {
         /// <summary>
         /// true is the graph is directed
         /// </summary>
-        public bool Directed {
+        public bool Directed
+        {
             get { return directed; }
             set { directed = value; }
         }
@@ -548,8 +553,11 @@ namespace Microsoft.Msagl.Drawing {
         /// <summary>
         /// underlying graph with pure geometry info
         /// </summary>
-        public GeometryGraph GeometryGraph {
-            get { return geomGraph; // != null ? geomGraph : geomGraph = CreateLayoutGraph.Create(this);
+        public GeometryGraph GeometryGraph
+        {
+            get
+            {
+                return geomGraph; // != null ? geomGraph : geomGraph = CreateLayoutGraph.Create(this);
             }
             set { geomGraph = value; }
         }
@@ -557,7 +565,8 @@ namespace Microsoft.Msagl.Drawing {
         /// <summary>
         /// Creates the corresponding geometry graph
         /// </summary>
-        public virtual void CreateGeometryGraph() {
+        public virtual void CreateGeometryGraph()
+        {
             GeometryGraph = new GeometryGraphCreator(this).Create();
         }
 
@@ -577,7 +586,8 @@ namespace Microsoft.Msagl.Drawing {
         /// <summary>
         /// debug only
         /// </summary>
-        public List<Color> DebugColors {
+        public List<Color> DebugColors
+        {
             get { return debugColors; }
             set { debugColors = value; }
         }
@@ -587,7 +597,8 @@ namespace Microsoft.Msagl.Drawing {
         /// <summary>
         /// debug only
         /// </summary>
-        public Dictionary<object, Color> ColorDictionary {
+        public Dictionary<object, Color> ColorDictionary
+        {
             get { return colorDictionary; }
             set { colorDictionary = value; }
         }
@@ -600,12 +611,13 @@ namespace Microsoft.Msagl.Drawing {
         /// <summary>
         ///  field used for debug purposes only 
         /// </summary>
-        bool showControlPoints=true;
+        bool showControlPoints = true;
 
         /// <summary>
         /// debug only
         /// </summary>
-        public bool ShowControlPoints {
+        public bool ShowControlPoints
+        {
             get { return showControlPoints; }
             set { showControlPoints = value; }
         }
@@ -614,24 +626,28 @@ namespace Microsoft.Msagl.Drawing {
         /// <summary>
         /// the geometry graph
         /// </summary>
-        public override GeometryObject GeometryObject {
+        public override GeometryObject GeometryObject
+        {
             get { return GeometryGraph; }
-            set { GeometryGraph = (GeometryGraph) value; }
+            set { GeometryGraph = (GeometryGraph)value; }
         }
-            
+
 #if TEST_MSAGL && !SILVERLIGHT
         ///<summary>
         ///</summary>
-        public List<ICurve> DebugICurves {
+        public List<ICurve> DebugICurves
+        {
             get { return debugICurves; }
             set { debugICurves = value; }
         }
 
         ///<summary>
         ///</summary>
-        public DebugCurve[] DebugCurves {
+        public DebugCurve[] DebugCurves
+        {
             get { return geomGraph == null ? null : geomGraph.DebugCurves; }
-            set {
+            set
+            {
                 if (geomGraph != null)
                     geomGraph.DebugCurves = value;
             }
@@ -639,13 +655,14 @@ namespace Microsoft.Msagl.Drawing {
 #endif
 
         LayerConstraints layerConstraints = new LayerConstraints();
-        Dictionary<string, Subgraph> subgraphMap=new Dictionary<string, Subgraph>();
-        
+        Dictionary<string, Subgraph> subgraphMap = new Dictionary<string, Subgraph>();
+
 
         ///<summary>
         /// 
         ///</summary>
-        public LayerConstraints LayerConstraints {
+        public LayerConstraints LayerConstraints
+        {
             get { return layerConstraints; }
             set { layerConstraints = value; }
         }
@@ -656,11 +673,14 @@ namespace Microsoft.Msagl.Drawing {
         /// Write the graph to a file
         /// </summary>
         /// <param name="fileName"></param>
-        public void Write(string fileName) {
-            if (fileName != null) {
+        public void Write(string fileName)
+        {
+            if (fileName != null)
+            {
                 if (!fileName.EndsWith(FileExtension, StringComparison.OrdinalIgnoreCase))
                     fileName += FileExtension;
-                using (Stream stream = File.Open(fileName, FileMode.Create)) {
+                using (Stream stream = File.Open(fileName, FileMode.Create))
+                {
                     WriteToStream(stream);
                 }
             }
@@ -670,7 +690,8 @@ namespace Microsoft.Msagl.Drawing {
         /// writes the graph to a stream
         /// </summary>
         /// <param name="stream"></param>
-        public void WriteToStream(Stream stream) {
+        public void WriteToStream(Stream stream)
+        {
             var graphWriter = new GraphWriter(stream, this);
             graphWriter.Write();
         }
@@ -680,8 +701,10 @@ namespace Microsoft.Msagl.Drawing {
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public static Graph Read(string fileName) {
-            using (Stream stream = File.OpenRead(fileName)) {
+        public static Graph Read(string fileName)
+        {
+            using (Stream stream = File.OpenRead(fileName))
+            {
                 return ReadGraphFromStream(stream);
             }
         }
@@ -691,7 +714,8 @@ namespace Microsoft.Msagl.Drawing {
         /// </summary>
         /// <param name="stream"></param>
         /// <returns></returns>
-        public static Graph ReadGraphFromStream(Stream stream) {
+        public static Graph ReadGraphFromStream(Stream stream)
+        {
             var graphReader = new GraphReader(stream);
             return graphReader.Read();
         }

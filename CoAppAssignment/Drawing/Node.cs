@@ -24,30 +24,33 @@ namespace Microsoft.Msagl.Drawing {
     /// <returns></returns>
     public delegate ICurve DelegateToSetNodeBoundary(Node node);
 
-    
+
     /// <summary>
     /// Node of the Microsoft.Msagl.Drawing.
     /// </summary>
     [Serializable]
-    public class Node : DrawingObject, ILabeledObject {
+    public class Node : DrawingObject, ILabeledObject
+    {
 
         Label label;
         /// <summary>
         /// the label of the object
         /// </summary>
-        public Label Label {
+        public Label Label
+        {
             get { return label; }
             set { label = value; }
         }
 
-/// <summary>
-/// A delegate to draw node
-/// </summary>
+        /// <summary>
+        /// A delegate to draw node
+        /// </summary>
         DelegateToOverrideNodeRendering drawNodeDelegate;
         /// <summary>
         /// If this delegate is not null and returns true then no node rendering is done
         /// </summary>
-        public DelegateToOverrideNodeRendering DrawNodeDelegate {
+        public DelegateToOverrideNodeRendering DrawNodeDelegate
+        {
             get { return drawNodeDelegate; }
             set { drawNodeDelegate = value; }
         }
@@ -58,15 +61,17 @@ namespace Microsoft.Msagl.Drawing {
         /// If the delegate is not null and returns not a null ICurve then this curve is taken as the node boundary
         /// </summary>
         /// <returns></returns>
-        public DelegateToSetNodeBoundary NodeBoundaryDelegate {
+        public DelegateToSetNodeBoundary NodeBoundaryDelegate
+        {
             get { return nodeBoundaryDelegate; }
             set { nodeBoundaryDelegate = value; }
         }
 
-/// <summary>
-/// gets the node bounding box
-/// </summary>
-        override public Rectangle BoundingBox {
+        /// <summary>
+        /// gets the node bounding box
+        /// </summary>
+        override public Rectangle BoundingBox
+        {
             get { return GeometryNode.BoundaryCurve.BoundingBox; }
         }
 
@@ -74,11 +79,12 @@ namespace Microsoft.Msagl.Drawing {
         /// Attribute controlling the node drawing.
         /// </summary>
         NodeAttr attr;
-/// <summary>
-/// gets or sets the node attribute
-/// </summary>
+        /// <summary>
+        /// gets or sets the node attribute
+        /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Attr")]
-        public NodeAttr Attr {
+        public NodeAttr Attr
+        {
             get { return attr; }
             set { attr = value; }
         }
@@ -86,7 +92,8 @@ namespace Microsoft.Msagl.Drawing {
         /// Creates a Node instance
         /// </summary>
         /// <param name="id">node name</param>
-        public Node(string id, string title) {            
+        public Node(string id, string title)
+        {
             Label = new Label();
             Label.GeometryLabel = null;
 
@@ -124,7 +131,8 @@ namespace Microsoft.Msagl.Drawing {
         /// <param name="o"></param>
         /// <returns></returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "o")]
-        public int CompareTo(object o) {
+        public int CompareTo(object o)
+        {
             Node n = o as Node;
             if (n == null)
                 throw new InvalidOperationException();
@@ -135,9 +143,10 @@ namespace Microsoft.Msagl.Drawing {
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString() {
+        public override string ToString()
+        {
             string label_text = Label == null ? Id : Label.Text;
-            return Utils.Quote(label_text) + "[" + Attr.ToString() + ","+ GeomDataString() + "]";
+            return Utils.Quote(label_text) + "[" + Attr.ToString() + "," + GeomDataString() + "]";
         }
 
         string HeightString() { return "height=" + GeometryNode.Height; }
@@ -147,44 +156,48 @@ namespace Microsoft.Msagl.Drawing {
         {
             return Utils.ConcatWithComma(HeightString(), CenterString(), WidthString());
         }
-/// <summary>
-/// the node ID
-/// </summary>
-        public string Id {
-            get {
+        /// <summary>
+        /// the node ID
+        /// </summary>
+        public string Id
+        {
+            get
+            {
                 return this.attr.Id;
             }
-            set {
+            set
+            {
                 attr.Id = value;
             }
         }
 
-        Set<Edge> outEdges=new Set<Edge>();
-            /// <summary>
-            /// Enumerates over outgoing edges of the node
-            /// </summary>
-        public IEnumerable<Edge> OutEdges{ get{return outEdges;}} 
+        Set<Edge> outEdges = new Set<Edge>();
+        /// <summary>
+        /// Enumerates over outgoing edges of the node
+        /// </summary>
+        public IEnumerable<Edge> OutEdges { get { return outEdges; } }
 
-        Set<Edge> inEdges=new Set<Edge>();
-            
+        Set<Edge> inEdges = new Set<Edge>();
+
         /// <summary>
         /// enumerates over the node incoming edges
         /// </summary>
-        public IEnumerable<Edge> InEdges{ get{return inEdges;}}
+        public IEnumerable<Edge> InEdges { get { return inEdges; } }
 
-        Set<Edge> selfEdges=new Set<Edge>();
+        Set<Edge> selfEdges = new Set<Edge>();
         Core.Layout.Node geometryNode;
 
         /// <summary>
         /// enumerates over the node self edges
         /// </summary>
-        public IEnumerable<Edge> SelfEdges{ get{return selfEdges;}}
-/// <summary>
-/// add an incoming edge to the node
-/// </summary>
-/// <param name="e"></param>
+        public IEnumerable<Edge> SelfEdges { get { return selfEdges; } }
+        /// <summary>
+        /// add an incoming edge to the node
+        /// </summary>
+        /// <param name="e"></param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "e")]
-        public void AddInEdge(Edge e){
+        public void AddInEdge(Edge e)
+        {
             inEdges.Insert(e);
         }
 
@@ -193,7 +206,8 @@ namespace Microsoft.Msagl.Drawing {
         /// </summary>
         /// <param name="e"></param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "e")]
-        public void AddOutEdge(Edge e){
+        public void AddOutEdge(Edge e)
+        {
             outEdges.Insert(e);
         }
 
@@ -202,7 +216,8 @@ namespace Microsoft.Msagl.Drawing {
         /// </summary>
         /// <param name="e"></param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "e")]
-        public void AddSelfEdge(Edge e){
+        public void AddSelfEdge(Edge e)
+        {
             selfEdges.Insert(e);
         }
 
@@ -233,43 +248,49 @@ namespace Microsoft.Msagl.Drawing {
             selfEdges.Remove(edge);
         }
 
-/// <summary>
-/// gets the geometry node
-/// </summary>
-        public override GeometryObject GeometryObject {
+        /// <summary>
+        /// gets the geometry node
+        /// </summary>
+        public override GeometryObject GeometryObject
+        {
             get { return GeometryNode; }
-            set { GeometryNode = (Core.Layout.Node) value; }
+            set { GeometryNode = (Core.Layout.Node)value; }
         }
 
         /// <summary>
         /// the underlying geometry node
         /// </summary>
-        public Core.Layout.Node GeometryNode {
+        public Core.Layout.Node GeometryNode
+        {
             get { return geometryNode; }
             set { geometryNode = value; }
         }
 
-        
+
 
 
         /// <summary>
         /// a shortcut to the node label text
         /// </summary>
 
-        public string LabelText {
-            get { return Label!=null?Label.Text:""; }
-            set {
-                if(Label==null)
-                    Label=new Label();
-                Label.Text = value; 
+        public string LabelText
+        {
+            get { return Label != null ? Label.Text : ""; }
+            set
+            {
+                if (Label == null)
+                    Label = new Label();
+                Label.Text = value;
             }
         }
 
-/// <summary>
-/// enumerates over all edges
-/// </summary>
-        public IEnumerable<Edge> Edges {
-            get {
+        /// <summary>
+        /// enumerates over all edges
+        /// </summary>
+        public IEnumerable<Edge> Edges
+        {
+            get
+            {
                 foreach (Edge e in InEdges)
                     yield return e;
                 foreach (Edge e in OutEdges)
@@ -282,9 +303,10 @@ namespace Microsoft.Msagl.Drawing {
         /// <summary>
         /// 
         /// </summary>
-        public double Height {
+        public double Height
+        {
             get { return GeometryNode.Height; }
-            
+
         }
         /// <summary>
         /// 
@@ -298,14 +320,15 @@ namespace Microsoft.Msagl.Drawing {
         /// <summary>
         /// 
         /// </summary>
-        public Point Pos{get { return GeometryNode.Center; }}
+        public Point Pos { get { return GeometryNode.Center; } }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public override bool Equals(object obj) {
+        public override bool Equals(object obj)
+        {
             var otherNode = obj as Node;
             if (otherNode == null)
                 return false;
@@ -316,19 +339,23 @@ namespace Microsoft.Msagl.Drawing {
         /// 
         /// </summary>
         /// <returns></returns>
-        public override int GetHashCode() {
+        public override int GetHashCode()
+        {
             return Id.GetHashCode();
         }
         /// <summary>
         /// 
         /// </summary>
-        public override bool IsVisible {
-            get {
+        public override bool IsVisible
+        {
+            get
+            {
                 return base.IsVisible;
             }
-            set {
+            set
+            {
                 base.IsVisible = value;
-                if(!value)
+                if (!value)
                     foreach (var e in Edges)
                         e.IsVisible = false;
             }

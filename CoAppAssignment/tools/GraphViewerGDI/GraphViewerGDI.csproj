@@ -434,6 +434,9 @@
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Msagl.Drawing">
+      <HintPath>..\..\..\dlls\Microsoft.Msagl.Drawing.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -554,10 +557,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Drawing\drawing.csproj">
-      <Project>{B76F8F71-4B00-4242-BE36-C9F0732511F7}</Project>
-      <Name>drawing</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\MSAGL\Msagl.csproj">
       <Project>{415D3E3F-7105-46C1-84D2-7ECB34213D92}</Project>
       <Name>Msagl</Name>
